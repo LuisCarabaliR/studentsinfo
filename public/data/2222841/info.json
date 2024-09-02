@@ -1,0 +1,9 @@
+{
+    "nombre": "Sarah Cardinaux",
+    "edad": 22,
+    "carrera": "Tec. Desarrrollo de Software",
+    "semestre": 6,
+    "gustos": ["Comer", "Domir"],
+    "noGustos": ["Despertarse temprano"],
+    "foto": "https://lh3.googleusercontent.com/a-/ALV-UjUT8h6UB1xRFFjBFsYqtHhy_0_WhN3myW8aR_KsJi_Oz_DwffYB=s48-p"
+}

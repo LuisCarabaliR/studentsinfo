@@ -1,0 +1,11 @@
+{
+    "nombre": "Carlos Daniel Corrales",
+    "edad": 21,
+    "carrera": "Ingeniería de Sistemas",
+    "semestre": 6,
+    "gustos": ["Videojuegos", "Codear", "Gym", "Parchar"],
+    "noGustos": ["Mentiras", "Cafe", "Comida de mar", "dormirme tarde"],
+    "foto": "https://lh3.googleusercontent.com/a/ACg8ocIVe1wu-0-WvYHdIS_HwsYte85oPC18wpKEM7v7ga7G_LCiuivG=s96-c-rg-br100"
+}
+
+  
