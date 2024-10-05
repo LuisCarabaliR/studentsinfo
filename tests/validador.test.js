@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const execSync = require('child_process').execSync;
 
 // Campos requeridos
 const requiredFields = [
@@ -26,21 +27,23 @@ const validateJsonFile = (filePath) => {
 
 // Se describen las pruebas que se van a hacer
 describe('Validación de archivos JSON', () => {
-  	// la ruta base al directorio donde están las carpetas de archivos JSON
-  	const basePath = path.join(__dirname, '../public/data');
-
-	// Se obtienen todas las carpetas dentro de public/data y se filtran solo las que son directorios
-  	const folders = fs.readdirSync(basePath).filter(folder => fs.statSync(path.join(basePath, folder)).isDirectory());
-
-  	// Iterar sobre cada carpeta y validar su info.json
-  	folders.forEach(folder => {
-		// Se define una prueba para validar el archivo info.json de cada carpeta
-  	  	test(`Validar ${folder}/info.json`, () => {
-			// Se construye la ruta completa al archivo info.json
-  	  	  	const jsonFilePath = path.join(basePath, folder, 'info.json');
-
-			// Se llama a la función de validación pasando la ruta del archivo JSON
-  	  	  	validateJsonFile(jsonFilePath);
-  	  	});
-  	});
+	// Se obtiene la lista de archivos modificados comparados con la rama 'master'
+	const changedFiles = execSync('git diff --name-only origin/master')
+	  .toString() // Convierte el resultado en una cadena de texto
+	  .split('\n') // Divide la cadena por líneas (cada archivo en una línea)
+	  .filter(file => file.includes('public/data') && file.includes('info.json')); // Filtra solo los archivos info.json en public/data
+  
+	// Si no hay archivos modificados, no se ejecutan las pruebas
+	if (changedFiles.length === 0) {
+	  console.log('No se modificaron archivos info.json en public/data');
+	  return;
+	}
+  
+	// Iterar sobre los archivos modificados y validar cada info.json
+	changedFiles.forEach(file => {
+	  test(`Validar ${file}`, () => {
+		const jsonFilePath = path.join(__dirname, `../${file}`); // Se construye la ruta completa al archivo modificado
+		validateJsonFile(jsonFilePath); // Valida el archivo modificado
+	  });
+	});
 });
