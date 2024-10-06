@@ -27,18 +27,23 @@ const validateJsonFile = (filePath) => {
 
 // Se describen las pruebas que se van a hacer
 describe('Validación de archivos JSON', () => {
-  // Se obtiene la lista de archivos modificados comparados con la rama 'master'
-  // Obtener la rama principal (puede ser 'main' o 'master')
-  const mainBranchRef = execSync('git symbolic-ref refs/remotes/origin/HEAD').toString().trim();
-  const mainBranch = mainBranchRef.replace('refs/remotes/origin/', '');
+  let mainBranch;
+  try {
+    // Obtener la rama principal usando git rev-parse
+    const mainBranchRef = execSync('git rev-parse --abbrev-ref origin/HEAD').toString().trim();
+    mainBranch = mainBranchRef.replace('origin/', '');
+  } catch (error) {
+    // Fallback por si no puede obtener la rama principal (asume 'main' o 'master')
+    mainBranch = 'main';
+  }
 
-  // Ahora puedes usar la rama principal para el diff
+  // Obtener archivos modificados comparados con la rama principal
   const changedFiles = execSync(`git diff --name-only origin/${mainBranch}`)
     .toString() // Convierte el resultado en una cadena de texto
     .split('\n') // Divide la cadena por líneas (cada archivo en una línea)
     .filter(file => file.includes('public/data') && file.includes('info.json')); // Filtra solo los archivos info.json en public/data
 
-  // Si no hay archivos modificados, agrega una prueba vacía
+  // Si no hay archivos modificados, agregar una prueba vacía
   if (changedFiles.length === 0) {
     test('No se modificaron archivos info.json en public/data', () => {
       console.log('No se modificaron archivos info.json en public/data');
