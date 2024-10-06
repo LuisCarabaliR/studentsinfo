@@ -1,0 +1,9 @@
+{
+    "nombre": "Santiago Jiménez",
+    "edad": 23,
+    "carrera": "Tec. Desarrollo de Sofware",
+    "semestre": 6,
+    "gustos": ["Entrenar", "Lectura", "Jugar"],
+    "noGustos": ["No entrenar", "Cali", "Manejar", "Cocinar"],
+    "foto": "https://lh3.googleusercontent.com/a/ACg8ocK0WFXDpM2xj1mLqQJZr_rQHSlUhpE7OBGkGfMjl7LhdRLO3kKh5w=s288-c-no"
+}
