@@ -28,8 +28,12 @@ const validateJsonFile = (filePath) => {
 // Se describen las pruebas que se van a hacer
 describe('Validación de archivos JSON', () => {
 	// Se obtiene la lista de archivos modificados comparados con la rama 'master'
-	const mainBranch = execSync('git symbolic-ref refs/remotes/origin/HEAD | sed \'s@^refs/remotes/origin/@@\'').toString().trim();
-	const changedFiles = execSync(`git diff --name-only origin/${mainBranch}`)	
+	// Obtener la rama principal (puede ser 'main' o 'master')
+	const mainBranchRef = execSync('git symbolic-ref refs/remotes/origin/HEAD').toString().trim();
+	const mainBranch = mainBranchRef.replace('refs/remotes/origin/', '');
+
+	// Ahora puedes usar la rama principal para el diff
+	const changedFiles = execSync(`git diff --name-only origin/${mainBranch}`)
 	  .toString() // Convierte el resultado en una cadena de texto
 	  .split('\n') // Divide la cadena por líneas (cada archivo en una línea)
 	  .filter(file => file.includes('public/data') && file.includes('info.json')); // Filtra solo los archivos info.json en public/data
@@ -47,4 +51,6 @@ describe('Validación de archivos JSON', () => {
 		validateJsonFile(jsonFilePath); // Valida el archivo modificado
 	  });
 	});
+
+	expect(changedFiles.length).toBeGreaterThan(0);
 });
