@@ -1,0 +1,26 @@
+name: Run Tests on Pull Request
+
+# Activar el flujo de trabajo
+on:
+  pull_request:
+    branches:
+      - master  # Se ejecutará cuando haya un PR hacia la rama master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Entorno en el que se ejecutarán las pruebas
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install  # Dependencias definidas en package.json
+
+    - name: Run Tests
+      run: npm test  # Ejecución de pruebas
