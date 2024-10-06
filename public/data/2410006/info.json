@@ -1,10 +1,13 @@
+
 {
-    "nombre": "Juanita Perez",
-    "edad": 20,
-    "carrera": "Ingeniería electronica",
-    "semestre": 5,
-    "gustos": ["Futbol", "Comer", "UFC", "Viajar"],
-    "noGustos": ["Despertarse temprano", "Comida picante"],
-    "foto": "https://vicebienestar.univalle.edu.co/media/k2/items/cache/42a35505dabe860dcdeb51f92d5be768_L.jpg"
+    "nombre": "Luis Carabali Rivera",
+    "edad": 28,
+    "carrera": "Ingeniería de Sistemas",
+    "semestre": 6,
+    "gustos": ["Videojuegos", "Anime", "Futbol", "circuitos", "comida Asiatica","Impresion 3d"],
+    "noGustos": ["deslealtad", "Cafe", "Musica Popular"],
+    "foto": "https://lh3.googleusercontent.com/a/ACg8ocKpwUGxgUq9-gohRfQ6lsjIMSFxCrO5v-pcZ45RF8CwKzGqvf9R=s288-c-no"
 }
+
+
   
