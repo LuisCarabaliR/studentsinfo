@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const execSync = require('child_process').execSync;
 
-// Campos requeridos
+// Campos requeridos en el archivo JSON
 const requiredFields = [
 	'nombre',
 	'edad',
@@ -16,40 +16,51 @@ const requiredFields = [
 
 // Función para validar un archivo JSON
 const validateJsonFile = (filePath) => {
-  	const data = JSON.parse(fs.readFileSync(filePath, 'utf8')); // Lee el archivo JSON y lo convierte a un objeto JavaScript
-  	const missingFields = requiredFields.filter(field => !(field in data)); // Filtra los campos requeridos para encontrar cuáles faltan en el objeto data
-	
-	// Si hay campos que faltan, lanza un error con un mensaje que enumera los campos faltantes
-  	if (missingFields.length > 0) {
-  	  throw new Error(`No están los campos requeridos: ${missingFields.join(', ')}`);
-  	}
+	try {
+		const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+		const missingFields = requiredFields.filter(field => !(field in data));
+
+		if (missingFields.length > 0) {
+			throw new Error(`No están los campos requeridos: ${missingFields.join(', ')}`);
+		}
+	} catch (error) {
+		throw new Error(`Error al validar el archivo JSON en ${filePath}: ${error.message}`);
+	}
 };
 
-// Se describen las pruebas que se van a hacer
-describe('Validación de archivos JSON', () => {
-	// Se obtiene la lista de archivos modificados comparados con la rama 'master'
-	// Obtener la rama principal (puede ser 'main' o 'master')
-	const mainBranchRef = execSync('git symbolic-ref refs/remotes/origin/HEAD').toString().trim();
-	const mainBranch = mainBranchRef.replace('refs/remotes/origin/', '');
+// Función para obtener la rama principal ('master' en este caso)
+const getMainBranch = () => {
+	try {
+		// Verifica si existe 'master'
+		execSync('git rev-parse --verify origin/master');
+		return 'master';
+	} catch (error) {
+		throw new Error('No se encontró la rama "master". Verifica tu repositorio.');
+	}
+};
 
-	// Ahora puedes usar la rama principal para el diff
+// Pruebas de validación de archivos JSON
+describe('Validación de archivos JSON', () => {
+	const mainBranch = getMainBranch(); // Obtiene la rama principal ('master')
+
+	// Obtén los archivos modificados comparados con la rama 'master'
 	const changedFiles = execSync(`git diff --name-only origin/${mainBranch}`)
-	  .toString() // Convierte el resultado en una cadena de texto
-	  .split('\n') // Divide la cadena por líneas (cada archivo en una línea)
-	  .filter(file => file.includes('public/data') && file.includes('info.json')); // Filtra solo los archivos info.json en public/data
-  
+		.toString()
+		.split('\n')
+		.filter(file => file.includes('public/data') && file.endsWith('info.json')); // Filtra solo archivos info.json en public/data
+
 	// Si no hay archivos modificados, no se ejecutan las pruebas
 	if (changedFiles.length === 0) {
-	  console.log('No se modificaron archivos info.json en public/data');
-	  return;
+		console.log('No se modificaron archivos info.json en public/data');
+		return;
 	}
-  
-	// Iterar sobre los archivos modificados y validar cada info.json
+
+	// Itera sobre los archivos modificados y valida cada uno
 	changedFiles.forEach(file => {
-	  test(`Validar ${file}`, () => {
-		const jsonFilePath = path.join(__dirname, `../${file}`); // Se construye la ruta completa al archivo modificado
-		validateJsonFile(jsonFilePath); // Valida el archivo modificado
-	  });
+		test(`Validar ${file}`, () => {
+			const jsonFilePath = path.join(__dirname, `../${file}`);
+			validateJsonFile(jsonFilePath);
+		});
 	});
 
 	expect(changedFiles.length).toBeGreaterThan(0);
